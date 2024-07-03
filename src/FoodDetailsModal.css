@@ -1,0 +1,65 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  background: #1e1e1e;
+  padding: 20px;
+  border-radius: 8px;
+  color: #e0e0e0;
+  max-width: 500px;
+  width: 100%;
+  text-align: center;
+}
+
+.nutrition-facts {
+  margin-top: 20px;
+  padding: 10px;
+  background: #2c2c2c;
+  border-radius: 8px;
+  text-align: left;
+}
+
+.nutrition-facts h4 {
+  margin-bottom: 10px;
+}
+
+.nutrition-facts ul {
+  list-style: none;
+  padding: 0;
+}
+
+.nutrition-facts li {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.nutrition-facts li span {
+  display: inline-block;
+  width: 45%;
+}
+
+
+
+.perish-meter {
+  width: 100%;
+  height: 20px;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: #e0e0e0;
+  margin-top: 10px;
+}
+
+.perish-meter-bar {
+  height: 100%;
+  transition: width 0.5s;
+}
