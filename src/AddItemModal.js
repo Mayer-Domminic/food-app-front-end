@@ -1,14 +1,21 @@
 import React, { useState } from 'react';
 import './AddItemModal.css';
+import { useNavigate } from 'react-router-dom';
 
 const AddItemModal = ({ closeModal, onSearch }) => {
   const [query, setQuery] = useState('');
   const [includeAllWords, setIncludeAllWords] = useState(false);
-  const [pageSize, setPageSize] = useState(20);
+  const [pageSize, setPageSize] = useState(10);
   const [dataType, setDataType] = useState('Branded');
+  const navigate = useNavigate();
 
   const handleSearch = () => {
     onSearch({ query, includeAllWords, pageSize, dataType });
+    closeModal();
+  };
+
+  const handleCreateNewFood = () => {
+    navigate('/create-food');
     closeModal();
   };
 
@@ -52,6 +59,7 @@ const AddItemModal = ({ closeModal, onSearch }) => {
         </div>
       </div>
       <button onClick={handleSearch}>Search</button>
+      <button onClick={handleCreateNewFood}>Create New Food</button>
       <button onClick={closeModal}>Close</button>
     </div>
   );

@@ -11,7 +11,6 @@ const QuantityModal = ({ item, closeModal, onAddToPantry }) => {
       const measure = selectedMeasure ? JSON.parse(selectedMeasure).disseminationText : item.servingSizeUnit;
       const measureWeight = selectedMeasure ? JSON.parse(selectedMeasure).gramWeight : item.servingSize;
       onAddToPantry(item, quantity, expiryDate, `${measure} (${measureWeight}g)`);
-      console.log(measure, measureWeight)
       closeModal();
     }
   };

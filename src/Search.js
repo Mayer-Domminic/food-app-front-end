@@ -22,6 +22,15 @@ const Search = () => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [showQuantityModal, setShowQuantityModal] = useState(false);
 
+  useEffect(() => {
+    if (location.state?.newItem) {
+      setSelectedItem(location.state.newItem);
+      setShowQuantityModal(true);
+      // Clear the navigation state
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  }, [location.state, navigate]);
+
   const searchFood = useCallback(async (pageNum = pageNumber) => {
     try {
       setLoading(true);
@@ -62,8 +71,8 @@ const Search = () => {
     searchFood(newPageNumber);
   };
 
-  const toggleExpand = (fdcId) => {
-    setExpandedItemId(expandedItemId === fdcId ? null : fdcId);
+  const toggleExpand = (id) => {
+    setExpandedItemId(expandedItemId === id ? null : id);
   };
 
   const handleSelectItem = (item) => {
@@ -86,11 +95,14 @@ const Search = () => {
       }
     }
   };
-  
+
+  const handleCreateNewFood = () => {
+    navigate('/create-food');
+  };
 
   const renderItems = (items) => (
     items.map((item) => (
-      <li key={item.fdcId} className="search-item" onClick={() => toggleExpand(item.fdcId)}>
+      <li key={item.fdcId || item._id} className="search-item" onClick={() => toggleExpand(item.fdcId || item._id)}>
         <h3>{item.description}</h3>
         <p>{item.dataType}</p>
         {item.brandOwner && <p>Brand Owner: {item.brandOwner}</p>}
@@ -103,13 +115,13 @@ const Search = () => {
         {item.packageWeight && <p>Package Weight: {item.packageWeight}</p>}
         {item.publishedDate && <p>Published Date: {item.publishedDate}</p>}
         {item.modifiedDate && <p>Modified Date: {item.modifiedDate}</p>}
-        {expandedItemId === item.fdcId && (
+        {expandedItemId === (item.fdcId || item._id) && (
           <div>
             <h4>Food Nutrients</h4>
             <ul>
               {item.foodNutrients.map((nutrient, index) => (
                 <li key={index}>
-                  <p>{nutrient.nutrientName}: {nutrient.value} {nutrient.unitName}</p>
+                  <p>{nutrient.nutrientName || nutrient.name}: {nutrient.value} {nutrient.unitName || nutrient.unit}</p>
                 </li>
               ))}
             </ul>
@@ -154,10 +166,12 @@ const Search = () => {
           <select value={dataType} onChange={(e) => setDataType(e.target.value)} className="filter-select">
             <option value="Branded">Branded</option>
             <option value="Survey (FNDDS)">Survey (FNDDS)</option>
+            <option value="Custom">Custom</option>
           </select>
         </label>
       </div>
       <button onClick={() => searchFood(1)} className="search-button">Search</button>
+      <button onClick={handleCreateNewFood} className="create-food-button">Create New Food</button>
       <div className="results-container">
         {error && <p className="error-message">{error}</p>}
         {loading ? (
@@ -165,10 +179,24 @@ const Search = () => {
         ) : (
           Object.keys(results).length > 0 ? (
             <>
-              <h2>Branded Items</h2>
-              <ul>{renderItems(results.Branded)}</ul>
-              <h2>Survey Items</h2>
-              <ul>{renderItems(results.Survey)}</ul>
+              {results.Custom && results.Custom.length > 0 && (
+                <>
+                  <h2>Custom Items</h2>
+                  <ul>{renderItems(results.Custom)}</ul>
+                </>
+              )}
+              {results.Branded && results.Branded.length > 0 && (
+                <>
+                  <h2>Branded Items</h2>
+                  <ul>{renderItems(results.Branded)}</ul>
+                </>
+              )}
+              {results.Survey && results.Survey.length > 0 && (
+                <>
+                  <h2>Survey Items</h2>
+                  <ul>{renderItems(results.Survey)}</ul>
+                </>
+              )}
             </>
           ) : (
             <p>No results found</p>

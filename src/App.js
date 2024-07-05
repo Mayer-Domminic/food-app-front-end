@@ -6,12 +6,13 @@ import LandingPage from './LandingPage';
 import Login from './Login';
 import Register from './Register';
 import Pantry from './Pantry';
+import CreateFood from './CreateFood';
 import { AuthProvider, AuthContext } from './AuthContext';
 import axios from 'axios';
 
 const ProtectedRoute = ({ element: Component, ...rest }) => {
   const { user } = useContext(AuthContext);
-  return user ? <Component {...rest} /> : <Navigate to="/login" />;
+  return user ? <Component {...rest} /> : <Navigate to="/" />;
 };
 
 function AppContent() {
@@ -43,6 +44,7 @@ function AppContent() {
         <Route path="/register" element={<Register />} />
         <Route path="/search" element={<Search addItemToPantry={() => {}} />} />
         <Route path="/home" element={<ProtectedRoute element={Pantry} />} />
+        <Route path="/create-food" element={<CreateFood />} />
       </Routes>
     </div>
   );
