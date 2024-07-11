@@ -6,7 +6,7 @@ const AddItemModal = ({ closeModal, onSearch }) => {
   const [query, setQuery] = useState('');
   const [includeAllWords, setIncludeAllWords] = useState(false);
   const [pageSize, setPageSize] = useState(10);
-  const [dataType, setDataType] = useState('Branded');
+  const [dataType, setDataType] = useState('All');
   const navigate = useNavigate();
 
   const handleSearch = () => {
@@ -52,8 +52,10 @@ const AddItemModal = ({ closeModal, onSearch }) => {
           <label>
             <span>Data Type:</span>
             <select value={dataType} onChange={(e) => setDataType(e.target.value)}>
+              <option value="All">All</option>
               <option value="Branded">Branded</option>
-              <option value="Survey (FNDDS)">Survey (FNDDS)</option>
+              <option value="Survey (FNDDS)">Survey</option>
+              <option value="Custom">Custom</option>
             </select>
           </label>
         </div>

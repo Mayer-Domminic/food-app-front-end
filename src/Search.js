@@ -14,8 +14,8 @@ const Search = () => {
   const [includeAllWords, setIncludeAllWords] = useState(location.state?.includeAllWords || false);
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(location.state?.pageSize || 20);
-  const [dataType, setDataType] = useState(location.state?.dataType || 'Branded');
-  const [results, setResults] = useState({});
+  const [dataType, setDataType] = useState(location.state?.dataType || 'All');
+  const [results, setResults] = useState({ Custom: [], Branded: [], Survey: [] });
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [expandedItemId, setExpandedItemId] = useState(null);
@@ -26,10 +26,9 @@ const Search = () => {
     if (location.state?.newItem) {
       setSelectedItem(location.state.newItem);
       setShowQuantityModal(true);
-      // Clear the navigation state
       navigate(location.pathname, { replace: true, state: {} });
     }
-  }, [location.state, navigate]);
+  }, [location.state, navigate, location.pathname]);
 
   const searchFood = useCallback(async (pageNum = pageNumber) => {
     try {
@@ -41,8 +40,9 @@ const Search = () => {
           allWords: includeAllWords,
           pageNumber: pageNum,
           pageSize,
-          DataType: dataType
-        }
+          dataType
+        }, 
+        withCredentials: true
       });
       setResults(response.data);
     } catch (error) {
@@ -164,8 +164,9 @@ const Search = () => {
         <label className="filter-label">
           Data Type:
           <select value={dataType} onChange={(e) => setDataType(e.target.value)} className="filter-select">
+            <option value="All">All</option>
             <option value="Branded">Branded</option>
-            <option value="Survey (FNDDS)">Survey (FNDDS)</option>
+            <option value="Survey (FNDDS)">Survey</option>
             <option value="Custom">Custom</option>
           </select>
         </label>

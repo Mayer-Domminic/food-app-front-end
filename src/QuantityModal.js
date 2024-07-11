@@ -4,13 +4,14 @@ import './QuantityModal.css';
 const QuantityModal = ({ item, closeModal, onAddToPantry }) => {
   const [quantity, setQuantity] = useState('');
   const [expiryDate, setExpiryDate] = useState('');
+  const [cost, setCost] = useState('');
   const [selectedMeasure, setSelectedMeasure] = useState(item.foodMeasures ? JSON.stringify(item.foodMeasures[0]) : null);
 
   const handleAdd = () => {
-    if (quantity && expiryDate) {
+    if (quantity && expiryDate && cost) {
       const measure = selectedMeasure ? JSON.parse(selectedMeasure).disseminationText : item.servingSizeUnit;
       const measureWeight = selectedMeasure ? JSON.parse(selectedMeasure).gramWeight : item.servingSize;
-      onAddToPantry(item, quantity, expiryDate, `${measure} (${measureWeight}g)`);
+      onAddToPantry(item, quantity, expiryDate, cost, `${measure} (${measureWeight}g)`);
       closeModal();
     }
   };
@@ -39,6 +40,12 @@ const QuantityModal = ({ item, closeModal, onAddToPantry }) => {
           value={expiryDate}
           onChange={(e) => setExpiryDate(e.target.value)}
           placeholder="Expiry Date"
+        />
+        <input
+          type="number"
+          value={cost}
+          onChange={(e) => setCost(e.target.value)}
+          placeholder="Cost"
         />
         <button onClick={handleAdd}>Add to Pantry</button>
         <button onClick={closeModal}>Close</button>

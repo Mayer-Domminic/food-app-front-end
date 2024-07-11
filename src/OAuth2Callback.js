@@ -11,7 +11,7 @@ const OAuth2Callback = () => {
 
     const fetchTokens = async () => {
       try {
-        const response = await axios.post('http://localhost:5000/oauth2callback', { code });
+        const response = await axios.post('http://localhost:5000/oauth2callback', { code }, { withCredentials: true });
         if (response.status === 200) {
           navigate('/home');
         }

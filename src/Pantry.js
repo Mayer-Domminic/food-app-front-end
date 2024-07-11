@@ -1,19 +1,29 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Pantry.css';
-import { AuthContext } from './AuthContext';
 import { useNavigate } from 'react-router-dom';
 import AddItemModal from './AddItemModal';
 import FoodDetailsModal from './FoodDetailsModal';
 
 const Pantry = () => {
-  const { user } = useContext(AuthContext);
+  const [user, setUser] = useState(null);
   const [pantryItems, setPantryItems] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/current_user', { withCredentials: true });
+        if (response.status === 200) {
+          setUser(response.data);
+        }
+      } catch (error) {
+        console.error('Error fetching user:', error);
+      }
+    };
+
     const fetchPantryItems = async () => {
       try {
         const response = await axios.get('http://localhost:5000/pantry', { withCredentials: true });
@@ -23,6 +33,7 @@ const Pantry = () => {
       }
     };
 
+    fetchUser();
     fetchPantryItems();
   }, []);
 
@@ -112,7 +123,7 @@ const Pantry = () => {
 
   return (
     <div className="pantry-container">
-      <h2>{user.username} Pantry</h2>
+      <h2>{user ? `${user.username}'s Pantry` : 'Loading...'}</h2>
       <div className="pantry-grid">
         {pantryItems.map((p, index) => (
           <div key={index} className="pantry-card" onClick={() => handleItemClick(p)}>
