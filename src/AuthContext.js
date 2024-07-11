@@ -1,3 +1,4 @@
+// AuthContext.js
 import React, { createContext, useState, useEffect } from 'react';
 import axios from 'axios';
 
@@ -21,27 +22,17 @@ export const AuthProvider = ({ children }) => {
     fetchUser();
   }, []);
 
-  const login = async (email, password) => {
+  const loginWithGoogle = async (credential) => {
     try {
-      await axios.post('http://localhost:5000/login', { email, password }, { withCredentials: true });
-      const response = await axios.get('http://localhost:5000/current_user', { withCredentials: true });
+      const response = await axios.post('http://localhost:5000/login_with_google', { credential }, { withCredentials: true });
       setUser(response.data);
     } catch (error) {
       throw error;
     }
   };
 
-  const logout = async () => {
-    try {
-      await axios.post('http://localhost:5000/logout', {}, { withCredentials: true });
-      setUser(null);
-    } catch (error) {
-      console.error('Error logging out:', error);
-    }
-  };
-
   return (
-    <AuthContext.Provider value={{ user, setUser, login, logout }}>
+    <AuthContext.Provider value={{ user, setUser, loginWithGoogle }}>
       {children}
     </AuthContext.Provider>
   );
