@@ -161,7 +161,7 @@ const Search = () => {
           <select value={dataType} onChange={(e) => setDataType(e.target.value)} className="filter-select">
             <option value="All">All</option>
             <option value="Branded">Branded</option>
-            <option value="Survey (FNDDS)">Survey</option>
+            <option value="Survey">Survey</option>
             <option value="Custom">Custom</option>
           </select>
         </label>

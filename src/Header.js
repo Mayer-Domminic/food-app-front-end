@@ -1,27 +1,30 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import './Header.css';
+import { AuthContext } from './AuthContext';
 
 const Header = () => {
+  const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const handleLogout = async () => {
-    try {
-      await axios.post('http://localhost:5000/logout', {}, { withCredentials: true });
-      navigate('/');
-    } catch (error) {
-      console.error('Error logging out:', error);
-    }
+  const handleLogout = () => {
+    logout();
+    navigate('/');
   };
 
   return (
-    <header className="App-header">
-      <h1>Food Search</h1>
-      <nav>
-        <button onClick={() => navigate('/home')}>Home</button>
-        <button onClick={() => navigate('/profile')}>Profile</button>
-        <button onClick={handleLogout}>Logout</button>
-      </nav>
+    <header className="header">
+      <h1 onClick={() => navigate('/')}>Food Search</h1>
+      {user && (
+        <nav>
+          <button onClick={() => navigate('/')}>Home</button>
+          <button onClick={() => navigate('/home')}>Pantry</button>
+          <button onClick={() => navigate('/profile')}>Profile</button>
+          <button onClick={() => navigate('/foods')}>Foods</button>
+          <button onClick={() => navigate('/recipes')}>Recipes</button>
+          <button onClick={handleLogout}>Logout</button>
+        </nav>
+      )}
     </header>
   );
 };

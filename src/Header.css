@@ -1,0 +1,31 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+  }
+  
+  .header h1 {
+    cursor: pointer;
+  }
+  
+  .header nav {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .header button {
+    background-color: #6200ea;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+  
+  .header button:hover {
+    background-color: #3700b3;
+  }
+  

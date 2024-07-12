@@ -65,34 +65,6 @@ const Pantry = () => {
     return 'red';
   };
 
-  const incrementQuantity = async (item) => {
-    try {
-      await axios.post('http://localhost:5000/update_quantity', {
-        item: item.item,
-        increment: true,
-      }, { withCredentials: true });
-      setPantryItems(pantryItems.map(p => 
-        p.item.fdcId === item.item.fdcId ? { ...p, quantity: p.quantity + 1 } : p
-      ));
-    } catch (error) {
-      console.error('Error incrementing quantity:', error);
-    }
-  };
-
-  const decrementQuantity = async (item) => {
-    try {
-      await axios.post('http://localhost:5000/update_quantity', {
-        item: item.item,
-        increment: false,
-      }, { withCredentials: true });
-      setPantryItems(pantryItems.map(p => 
-        p.item.fdcId === item.item.fdcId ? { ...p, quantity: p.quantity - 1 } : p
-      ));
-    } catch (error) {
-      console.error('Error decrementing quantity:', error);
-    }
-  };
-
   const removeItem = async (item) => {
     try {
       await axios.post('http://localhost:5000/remove_item', {
@@ -101,23 +73,6 @@ const Pantry = () => {
       setPantryItems(pantryItems.filter(p => p.item.fdcId !== item.item.fdcId));
     } catch (error) {
       console.error('Error removing item:', error);
-    }
-  };
-
-  const handleAddToPantry = async (item, quantity, expiryDate, measure) => {
-    if (user && user.email) {
-      try {
-        await axios.post('http://localhost:5000/add_to_pantry', {
-          item: { ...item, selectedMeasure: measure },
-          quantity,
-          expiryDate,
-          measure
-        }, { withCredentials: true });
-        setPantryItems([...pantryItems, { item: { ...item, selectedMeasure: measure }, quantity, expiryDate, measure }]);
-        closeModal();
-      } catch (error) {
-        console.error('Error adding item to pantry:', error);
-      }
     }
   };
 
@@ -140,11 +95,7 @@ const Pantry = () => {
                 }}
               ></div>
             </div>
-            <div className="quantity-controls">
-              <button onClick={(e) => { e.stopPropagation(); incrementQuantity(p); }}>+</button>
-              <button onClick={(e) => { e.stopPropagation(); decrementQuantity(p); }} disabled={p.quantity <= 1}>-</button>
-              <button onClick={(e) => { e.stopPropagation(); removeItem(p); }}>Remove</button>
-            </div>
+            <button onClick={(e) => { e.stopPropagation(); removeItem(p); }}>Remove</button>
           </div>
         ))}
         <div className="pantry-card add-card" onClick={() => setShowModal(true)}>

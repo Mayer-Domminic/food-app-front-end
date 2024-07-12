@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
 import './FoodDetailsModal.css';
 
 const FoodDetailsModal = ({ item, closeModal }) => {
+  const [quantity, setQuantity] = useState(item.quantity);
+
   if (!item) return null;
 
   const calculateDaysLeft = (expiryDate) => {
@@ -41,6 +44,18 @@ const FoodDetailsModal = ({ item, closeModal }) => {
 
   const daysLeft = calculateDaysLeft(item.expiryDate);
 
+  const updateQuantity = async () => {
+    try {
+      await axios.post('http://localhost:5000/update_quantity', {
+        item: item.item,
+        quantity: quantity,
+      }, { withCredentials: true });
+      closeModal();
+    } catch (error) {
+      console.error('Error updating quantity:', error);
+    }
+  };
+
   return (
     <div className="modal-content">
       <h3>{item.item.description}</h3>
@@ -75,6 +90,17 @@ const FoodDetailsModal = ({ item, closeModal }) => {
             backgroundColor: getPerishMeterColor(daysLeft),
           }}
         ></div>
+      </div>
+      <div className="quantity-update">
+        <label>
+          <strong>Update Quantity:</strong>
+          <input
+            type="number"
+            value={quantity}
+            onChange={(e) => setQuantity(e.target.value)}
+          />
+        </label>
+        <button onClick={updateQuantity}>Update</button>
       </div>
       <button onClick={closeModal}>Close</button>
     </div>

@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import './Pantry.css'; // Ensure the card CSS is imported
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
+import { AuthContext } from './AuthContext';
 import axios from 'axios';
 
 const LandingPage = () => {
   const navigate = useNavigate();
+  const { user } = useContext(AuthContext);
 
   const handleGoogleLoginSuccess = async (credentialResponse) => {
     const { credential } = credentialResponse;
@@ -23,14 +26,28 @@ const LandingPage = () => {
   };
 
   return (
-    <div>
+    <div className="landing-container">
       <h1>Welcome to Food Search</h1>
-      <GoogleOAuthProvider clientId="420246684928-ldrj45h3gqjln6gn3t5oq42legg9ig41.apps.googleusercontent.com">
-        <GoogleLogin
-          onSuccess={handleGoogleLoginSuccess}
-          onError={handleGoogleLoginError}
-        />
-      </GoogleOAuthProvider>
+      {user ? (
+        <div className="pantry-grid">
+          <div className="pantry-card" onClick={() => navigate('/recipes')}>
+            <h3>Recipes</h3>
+          </div>
+          <div className="pantry-card" onClick={() => navigate('/foods')}>
+            <h3>Foods</h3>
+          </div>
+          <div className="pantry-card" onClick={() => navigate('/home')}>
+            <h3>Pantry</h3>
+          </div>
+        </div>
+      ) : (
+        <GoogleOAuthProvider clientId="your-client-id">
+          <GoogleLogin
+            onSuccess={handleGoogleLoginSuccess}
+            onError={handleGoogleLoginError}
+          />
+        </GoogleOAuthProvider>
+      )}
     </div>
   );
 };
