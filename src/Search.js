@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useContext } from 'react';
 import axios from 'axios';
 import './Search.css';
+import './Pantry.css'; // Import the pantry styles
 import { useNavigate, useLocation } from 'react-router-dom';
 import QuantityModal from './QuantityModal';
 import { AuthContext } from './AuthContext';
@@ -41,7 +42,7 @@ const Search = () => {
           pageNumber: pageNum,
           pageSize,
           dataType
-        }, 
+        },
         withCredentials: true
       });
       setResults(response.data);
@@ -102,19 +103,13 @@ const Search = () => {
 
   const renderItems = (items) => (
     items.map((item) => (
-      <li key={item.fdcId || item._id} className="search-item" onClick={() => toggleExpand(item.fdcId || item._id)}>
+      <div key={item.fdcId || item._id} className="pantry-card" onClick={() => toggleExpand(item.fdcId || item._id)}>
         <h3>{item.description}</h3>
-        <p>{item.dataType}</p>
-        {item.brandOwner && <p>Brand Owner: {item.brandOwner}</p>}
-        {item.brandName && <p>Brand Name: {item.brandName}</p>}
-        {item.ingredients && <p>Ingredients: {item.ingredients}</p>}
-        {item.servingSize && <p>Serving Size: {item.servingSize} {item.servingSizeUnit}</p>}
-        {item.householdServingFullText && <p>Household Serving: {item.householdServingFullText}</p>}
-        {item.gtinUpc && <p>UPC: {item.gtinUpc}</p>}
-        {item.foodCategory && <p>Category: {item.foodCategory}</p>}
-        {item.packageWeight && <p>Package Weight: {item.packageWeight}</p>}
-        {item.publishedDate && <p>Published Date: {item.publishedDate}</p>}
-        {item.modifiedDate && <p>Modified Date: {item.modifiedDate}</p>}
+        {item.dataType === 'Branded' ? (
+          <p>Brand: {item.brandName || 'N/A'}</p>
+        ) : (
+          <p>Category: {item.foodCategory || 'N/A'}</p>
+        )}
         {expandedItemId === (item.fdcId || item._id) && (
           <div>
             <h4>Food Nutrients</h4>
@@ -128,7 +123,7 @@ const Search = () => {
             <button onClick={() => handleSelectItem(item)}>Select Item</button>
           </div>
         )}
-      </li>
+      </div>
     ))
   );
 
@@ -180,23 +175,23 @@ const Search = () => {
         ) : (
           Object.keys(results).length > 0 ? (
             <>
-              {results.Custom && results.Custom.length > 0 && (
-                <>
-                  <h2>Custom Items</h2>
-                  <ul>{renderItems(results.Custom)}</ul>
-                </>
+              <h2>Custom Items</h2>
+              {results.Custom.length > 0 ? (
+                <div className="pantry-grid">{renderItems(results.Custom)}</div>
+              ) : (
+                <p>No search results</p>
               )}
-              {results.Branded && results.Branded.length > 0 && (
-                <>
-                  <h2>Branded Items</h2>
-                  <ul>{renderItems(results.Branded)}</ul>
-                </>
+              <h2>Branded Items</h2>
+              {results.Branded.length > 0 ? (
+                <div className="pantry-grid">{renderItems(results.Branded)}</div>
+              ) : (
+                <p>No search results</p>
               )}
-              {results.Survey && results.Survey.length > 0 && (
-                <>
-                  <h2>Survey Items</h2>
-                  <ul>{renderItems(results.Survey)}</ul>
-                </>
+              <h2>Survey Items</h2>
+              {results.Survey.length > 0 ? (
+                <div className="pantry-grid">{renderItems(results.Survey)}</div>
+              ) : (
+                <p>No search results</p>
               )}
             </>
           ) : (
