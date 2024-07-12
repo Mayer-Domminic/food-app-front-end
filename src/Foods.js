@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Pantry.css';
 import { useNavigate } from 'react-router-dom';
-import FoodDetailsModal from './FoodDetailsModal';
+import CustomFoodDetailsModal from './CustomFoodDetailsModal';
 
 const Foods = () => {
   const [user, setUser] = useState(null);
@@ -59,7 +59,7 @@ const Foods = () => {
       </div>
       {showModal && selectedItem && (
         <div className="modal-overlay">
-          <FoodDetailsModal
+          <CustomFoodDetailsModal
             item={selectedItem}
             closeModal={closeModal}
           />
