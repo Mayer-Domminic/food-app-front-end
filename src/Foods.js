@@ -3,11 +3,13 @@ import axios from 'axios';
 import './Pantry.css';
 import { useNavigate } from 'react-router-dom';
 import CustomFoodDetailsModal from './CustomFoodDetailsModal';
+import AddCustomItem from './AddCustomItem';
 
 const Foods = () => {
   const [user, setUser] = useState(null);
   const [foods, setFoods] = useState([]);
-  const [showModal, setShowModal] = useState(false);
+  const [showDetailsModal, setShowDetailsModal] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const navigate = useNavigate();
 
@@ -38,12 +40,20 @@ const Foods = () => {
 
   const handleItemClick = (item) => {
     setSelectedItem(item);
-    setShowModal(true);
+    setShowDetailsModal(true);
   };
 
-  const closeModal = () => {
-    setShowModal(false);
+  const handleAddFood = (newFood) => {
+    setFoods([...foods, newFood]);
+  };
+
+  const closeDetailsModal = () => {
+    setShowDetailsModal(false);
     setSelectedItem(null);
+  };
+
+  const closeAddModal = () => {
+    setShowAddModal(false);
   };
 
   return (
@@ -56,12 +66,23 @@ const Foods = () => {
             <p>Category: {food.foodCategory || 'N/A'}</p>
           </div>
         ))}
+        <div className="pantry-card add-card" onClick={() => setShowAddModal(true)}>
+          <h3>+</h3>
+        </div>
       </div>
-      {showModal && selectedItem && (
+      {showDetailsModal && selectedItem && (
         <div className="modal-overlay">
           <CustomFoodDetailsModal
             item={selectedItem}
-            closeModal={closeModal}
+            closeModal={closeDetailsModal}
+          />
+        </div>
+      )}
+      {showAddModal && (
+        <div className="modal-overlay">
+          <AddCustomItem
+            closeModal={closeAddModal}
+            onAdd={handleAddFood}
           />
         </div>
       )}

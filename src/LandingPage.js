@@ -1,29 +1,12 @@
 import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Pantry.css'; // Ensure the card CSS is imported
-import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
+import GoogleLoginButton from './GoogleLoginButton';
 import { AuthContext } from './AuthContext';
-import axios from 'axios';
 
 const LandingPage = () => {
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
-
-  const handleGoogleLoginSuccess = async (credentialResponse) => {
-    const { credential } = credentialResponse;
-    try {
-      const response = await axios.post('http://localhost:5000/login_with_google', { token: credential }, { withCredentials: true });
-      if (response.status === 200) {
-        navigate('/home');
-      }
-    } catch (error) {
-      console.error('Google login error:', error.message);
-    }
-  };
-
-  const handleGoogleLoginError = (error) => {
-    console.error('Google login failed:', error);
-  };
 
   return (
     <div className="landing-container">
@@ -41,12 +24,7 @@ const LandingPage = () => {
           </div>
         </div>
       ) : (
-        <GoogleOAuthProvider clientId="your-client-id">
-          <GoogleLogin
-            onSuccess={handleGoogleLoginSuccess}
-            onError={handleGoogleLoginError}
-          />
-        </GoogleOAuthProvider>
+        <GoogleLoginButton />
       )}
     </div>
   );
